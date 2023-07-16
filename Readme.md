@@ -9,3 +9,7 @@ The app fetches news article details from an API and presents them on the home s
 
 
 <img src="https://github.com/Ankit2305/NewsApplication/blob/master/demo/demo.gif?raw=true" width="300px"/>
+
+# Download
+
+Download News Application [Apk File](https://github.com/Ankit2305/NewsApplication/raw/master/demo/newsapplication.apk)
