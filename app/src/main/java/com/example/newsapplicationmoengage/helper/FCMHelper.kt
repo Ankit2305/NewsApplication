@@ -12,18 +12,18 @@ import com.google.firebase.messaging.FirebaseMessaging
  *
  * @param context The context of the application or activity.
  */
-fun addFCMTokenListener(context: Context) {
-    FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-        if (!task.isSuccessful) {
-            Log.w("DebugTag", "Fetching FCM registration token failed", task.exception)
-            return@OnCompleteListener
-        }
-
-        // Get new FCM registration token
-        val token = task.result
-
-        // Log and toast
-        val msg = "Token: $token"
-        Log.d("DebugTag", msg)
-    })
-}
+//fun addFCMTokenListener(context: Context) {
+//    FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+//        if (!task.isSuccessful) {
+//            Log.w("DebugTag", "Fetching FCM registration token failed", task.exception)
+//            return@OnCompleteListener
+//        }
+//
+//        // Get new FCM registration token
+//        val token = task.result
+//
+//        // Log and toast
+//        val msg = "Token: $token"
+//        Log.d("DebugTag", msg)
+//    })
+//}
