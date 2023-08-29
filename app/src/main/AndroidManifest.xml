@@ -7,6 +7,12 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
+<!--    MoEngage Backup Descriptor -->
+<!--    android:fullBackupContent="@xml/com_moengage_backup_descriptor" -->
+
+<!--    MoEngage Data Extraction Rules -->
+<!--    android:dataExtractionRules="@xml/com_moengage_data_extraction_rules" -->
+
     <application
         android:name=".NewsApplication"
         android:allowBackup="true"
@@ -19,6 +25,11 @@
         tools:targetApi="31">
         <activity
             android:name=".MainActivity"
+            android:exported="true">
+        </activity>
+
+        <activity
+            android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

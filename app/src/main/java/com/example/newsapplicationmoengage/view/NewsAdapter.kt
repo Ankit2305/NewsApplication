@@ -15,6 +15,7 @@ import com.example.newsapplicationmoengage.constant.ViewType
 import com.example.newsapplicationmoengage.databinding.NewsSingleItemBinding
 import com.example.newsapplicationmoengage.databinding.NewsSingleItemShimmerBinding
 import com.example.newsapplicationmoengage.helper.DateParser
+import com.example.newsapplicationmoengage.helper.MoeEventHelper
 import com.example.newsapplicationmoengage.model.News
 
 /**
@@ -92,6 +93,15 @@ class NewsAdapter(private val context: Context): ListAdapter<News, NewsAdapter.V
                         Intent(Intent.ACTION_VIEW, Uri.parse(news.url))
                     context.startActivity(browserIntent)
                 }
+                MoeEventHelper.sendEvent(
+                    context = context,
+                    eventName = "News Card Viewed",
+                    "title" to news.title,
+                    "description" to news.description,
+                    "publishedAt" to news.publishedAt,
+                    "urlToImage" to news.urlToImage,
+                    "url" to news.url
+                )
             }
         }
     }

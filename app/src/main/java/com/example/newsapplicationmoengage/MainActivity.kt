@@ -1,6 +1,7 @@
 package com.example.newsapplicationmoengage
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -13,8 +14,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newsapplicationmoengage.constant.SortOrder
 import com.example.newsapplicationmoengage.databinding.ActivityMainBinding
+import com.example.newsapplicationmoengage.helper.MoeEventHelper
+import com.example.newsapplicationmoengage.helper.SharedPreferencesHelper
+import com.example.newsapplicationmoengage.helper.login.LocalLogin
 import com.example.newsapplicationmoengage.view.NewsAdapter
 import com.example.newsapplicationmoengage.viewmodel.NewsViewModel
+import com.moengage.core.MoECoreHelper
+import com.moengage.core.Properties
+import com.moengage.core.analytics.MoEAnalyticsHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -25,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     private val newsViewModel by viewModel<NewsViewModel>()
     private lateinit var binding: ActivityMainBinding
     private lateinit var newsAdapter: NewsAdapter
+    private val localLogin = LocalLogin(this)
     private val pushNotificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
@@ -33,6 +41,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.i("MainActivityTag", "Logged In user = ${SharedPreferencesHelper.getProperty(this, SharedPreferencesHelper.LOGGED_IN_USER)}")
+        MoeEventHelper.sendEvent(this, "MainActivity onCreate()")
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setUpView()
@@ -70,6 +80,10 @@ class MainActivity : AppCompatActivity() {
      */
     private fun fetchAllNews() {
         newsViewModel.fetchAllNews()
+        MoeEventHelper.sendEvent(
+            context = this,
+            eventName = "Fetch News"
+        )
         binding.apply {
             sortNewsFab.visibility = View.GONE
             newsRecyclerView.visibility = View.GONE
@@ -89,15 +103,35 @@ class MainActivity : AppCompatActivity() {
         }
         binding.apply {
             sortNewsFab.setOnClickListener {
+                var sortOrder = SortOrder.INCREASING
                 val sortDrawable = when(newsViewModel.sortNews()) {
                     SortOrder.INCREASING -> {
+                        sortOrder = SortOrder.DECREASING
                         resources.getDrawable(R.drawable.ic_ascending, theme)
                     }
                     SortOrder.DECREASING -> {
+                        sortOrder = SortOrder.DECREASING
                         resources.getDrawable(R.drawable.ic_descending, theme)
                     }
                 }
                 sortNewsFab.setImageDrawable(sortDrawable)
+                MoeEventHelper.sendEvent(
+                    context = this@MainActivity,
+                    eventName = "Sort News",
+                    "sortOrder" to sortOrder
+                )
+//                MoEAnalyticsHelper.setUniqueId(this@MainActivity, "1234_${System.currentTimeMillis()}")
+            }
+
+            logoutFab.setOnClickListener {
+                localLogin.logout {
+                    Log.i("MainActivityTag", "User logged out ...")
+
+                    MoECoreHelper.logoutUser(this@MainActivity)
+
+                    finish()
+                    startActivity(Intent(this@MainActivity, LoginActivity::class.java))
+                }
             }
         }
     }

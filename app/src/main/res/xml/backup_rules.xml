@@ -10,4 +10,8 @@
    <include domain="sharedpref" path="."/>
    <exclude domain="sharedpref" path="device.xml"/>
 -->
+    <!-- Exclude MoEngage DB and SharedPref -->
+    <exclude domain="database" path="MOEInteractions"/>
+    <exclude domain="sharedpref" path="pref_moe.xml"/>
+
 </full-backup-content>
