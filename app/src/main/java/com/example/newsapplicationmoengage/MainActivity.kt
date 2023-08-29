@@ -19,9 +19,15 @@ import com.example.newsapplicationmoengage.helper.SharedPreferencesHelper
 import com.example.newsapplicationmoengage.helper.login.LocalLogin
 import com.example.newsapplicationmoengage.view.NewsAdapter
 import com.example.newsapplicationmoengage.viewmodel.NewsViewModel
+import com.moengage.core.DataCenter
+import com.moengage.core.LogLevel
 import com.moengage.core.MoECoreHelper
+import com.moengage.core.MoEngage
 import com.moengage.core.Properties
 import com.moengage.core.analytics.MoEAnalyticsHelper
+import com.moengage.core.config.LogConfig
+import com.moengage.core.config.NotificationConfig
+import com.moengage.pushbase.MoEPushHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -35,8 +41,13 @@ class MainActivity : AppCompatActivity() {
     private val localLogin = LocalLogin(this)
     private val pushNotificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
-    ) { granted ->
-        Log.i("DebugTag", "Permission granted")
+    ) { isGranted ->
+        MoEPushHelper.getInstance().pushPermissionResponse(applicationContext, isGranted)
+        var requestCount = SharedPreferencesHelper.getProperty(applicationContext, "notifPermissionRequestCount")?.toIntOrNull() ?: 0
+        requestCount ++
+        SharedPreferencesHelper.setProperty(applicationContext, "notifPermissionRequestCount", requestCount.toString())
+        MoEPushHelper.getInstance().updatePushPermissionRequestCount(applicationContext, requestCount)
+        Log.i("DebugTag", "Permission granted: $isGranted")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +59,7 @@ class MainActivity : AppCompatActivity() {
         setUpView()
         setUpObservers()
         fetchAllNews()
+//        initializeMoEngageSdk()
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -143,5 +155,21 @@ class MainActivity : AppCompatActivity() {
      */
     private fun showErrorMessage(message: String) {
         Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun initializeMoEngageSdk() {
+        val moEngage = MoEngage.Builder(this.application, "EAUBZROL4WEPUSJDS814PDQO", DataCenter.DATA_CENTER_1)
+            .configureNotificationMetaData(
+                NotificationConfig(
+                    smallIcon = R.drawable.ic_stat_name,
+                    largeIcon = R.mipmap.ic_launcher,
+                    notificationColor = R.color.moengage_primary,
+                    isMultipleNotificationInDrawerEnabled = true
+                )
+            )
+//            .configureFcm(FcmConfig(false))
+            .configureLogs(LogConfig(level = LogLevel.VERBOSE, true))
+            .build()
+        MoEngage.initialiseDefaultInstance(moEngage)
     }
 }

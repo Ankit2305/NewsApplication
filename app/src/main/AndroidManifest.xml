@@ -38,8 +38,15 @@
             </intent-filter>
         </activity>
 
-<!--        <service-->
-<!--            android:name=".fcm.NewsFirebaseMessagingService"-->
+        <service
+            android:name=".fcm.NewsFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+<!--        <service android:name="com.moengage.firebase.MoEFireBaseMessagingService"-->
 <!--            android:exported="false">-->
 <!--            <intent-filter>-->
 <!--                <action android:name="com.google.firebase.MESSAGING_EVENT" />-->

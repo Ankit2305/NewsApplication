@@ -6,19 +6,25 @@ import android.util.Log
 import com.example.newsapplicationmoengage.di.appModule
 import com.example.newsapplicationmoengage.helper.MoeEventHelper
 import com.example.newsapplicationmoengage.helper.SharedPreferencesHelper
+import com.example.newsapplicationmoengage.helper.addFCMTokenListener
 import com.example.newsapplicationmoengage.helper.login.LocalLogin
-//import com.example.newsapplicationmoengage.helper.addFCMTokenListener
 import com.google.firebase.FirebaseApp
 import com.moengage.core.DataCenter
 import com.moengage.core.LogLevel
 import com.moengage.core.MoECoreHelper
 import com.moengage.core.MoEngage
 import com.moengage.core.analytics.MoEAnalyticsHelper
+import com.moengage.core.config.FcmConfig
 import com.moengage.core.config.LogConfig
+import com.moengage.core.config.NotificationConfig
 import com.moengage.core.enableAdIdTracking
 import com.moengage.core.listeners.AppBackgroundListener
 import com.moengage.core.model.AppBackgroundData
 import com.moengage.core.model.AppStatus
+import com.moengage.firebase.MoEFireBaseHelper
+import com.moengage.pushbase.MoEPushHelper
+import com.moengage.pushbase.listener.TokenAvailableListener
+import com.moengage.pushbase.model.Token
 import org.koin.core.context.startKoin
 
 class NewsApplication: Application() {
@@ -28,11 +34,17 @@ class NewsApplication: Application() {
         // Initialize Firebase
         FirebaseApp.initializeApp(this)
 
-        // Register FCM token listener
-//        addFCMTokenListener(this)
-
         //Initialize MoEngage Sdk on main thread
         initializeMoEngageSdk()
+
+        // Register FCM token listener
+        addFCMTokenListener(this)
+
+        //Add Token Listener
+        addTokenListener()
+
+        //Send App Open Event
+        sendAppOpenEvent()
 
         //Set Up Koin Modules
         setUpKoinDi()
@@ -47,18 +59,20 @@ class NewsApplication: Application() {
         LocalLogin.initializeLocalLogin(this)
 
         //AppBackgroundListener
-        //In doc: MoECallbacks.getInstance().addAppBackgroundListener().
         MoECoreHelper.addAppBackgroundListener(object: AppBackgroundListener {
             override fun onAppBackground(context: Context, data: AppBackgroundData) {
                 Log.i("ApplicationTag", "context: ${context::class.simpleName}, data: $data")
                 MoeEventHelper.sendEvent(
                     context = context,
-                    "Exit Intent",
+                    "App Close Custom",
                     "appBackgroundData" to data.toString()
                 )
             }
 
         })
+
+        setUpNotificationChannelsForMoEngage()
+
     }
 
     private fun setInstallOrUpdateAppStatus() {
@@ -76,8 +90,41 @@ class NewsApplication: Application() {
         }
     }
 
+    private fun sendAppOpenEvent() {
+        MoeEventHelper.sendEvent(
+            context = this,
+            eventName = "App Open Custom",
+            "timeStamp" to System.currentTimeMillis()
+        )
+    }
+
+    private fun setUpNotificationChannelsForMoEngage() {
+        MoEPushHelper.getInstance().setUpNotificationChannels(this)
+
+        //	MoEPushHelper.getInstance().requestPushPermission(activity)
+        // 	MoEPushHelper.getInstance().navigateToSettings(activity)
+    }
+
+    private fun addTokenListener() {
+        MoEFireBaseHelper.getInstance().addTokenListener { token ->
+            Log.i(
+                "NewsApplicationTag",
+                "Token Available: $token"
+            )
+        }
+    }
+
     private fun initializeMoEngageSdk() {
         val moEngage = MoEngage.Builder(this, "EAUBZROL4WEPUSJDS814PDQO", DataCenter.DATA_CENTER_1)
+            .configureNotificationMetaData(
+                NotificationConfig(
+                    smallIcon = R.drawable.ic_stat_name,
+                    largeIcon = R.mipmap.ic_launcher,
+                    notificationColor = R.color.moengage_primary,
+                    isMultipleNotificationInDrawerEnabled = true
+                )
+            )
+//            .configureFcm(FcmConfig(false))
             .configureLogs(LogConfig(level = LogLevel.VERBOSE, true))
             .build()
         MoEngage.initialiseDefaultInstance(moEngage)
