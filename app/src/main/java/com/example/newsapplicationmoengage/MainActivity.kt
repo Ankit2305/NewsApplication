@@ -32,6 +32,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.math.log
 
 class MainActivity : AppCompatActivity() {
 
@@ -52,6 +53,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        handleLogNotificationClick()
         Log.i("MainActivityTag", "Logged In user = ${SharedPreferencesHelper.getProperty(this, SharedPreferencesHelper.LOGGED_IN_USER)}")
         MoeEventHelper.sendEvent(this, "MainActivity onCreate()")
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -171,5 +173,12 @@ class MainActivity : AppCompatActivity() {
             .configureLogs(LogConfig(level = LogLevel.VERBOSE, true))
             .build()
         MoEngage.initialiseDefaultInstance(moEngage)
+    }
+
+    private fun handleLogNotificationClick() {
+        val logNotificationOnClick = intent.getBooleanExtra("logNotificationOnClick", false)
+        if(logNotificationOnClick) {
+            MoEPushHelper.getInstance().logNotificationClick(applicationContext, intent)
+        }
     }
 }
