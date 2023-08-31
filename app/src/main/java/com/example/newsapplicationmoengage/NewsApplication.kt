@@ -8,6 +8,7 @@ import com.example.newsapplicationmoengage.helper.MoeEventHelper
 import com.example.newsapplicationmoengage.helper.SharedPreferencesHelper
 import com.example.newsapplicationmoengage.helper.addFCMTokenListener
 import com.example.newsapplicationmoengage.helper.login.LocalLogin
+import com.example.newsapplicationmoengage.moe.CustomPushMessageListener
 import com.google.firebase.FirebaseApp
 import com.moengage.core.DataCenter
 import com.moengage.core.LogLevel
@@ -70,6 +71,9 @@ class NewsApplication: Application() {
             }
 
         })
+
+        //Add Custom Notification Listener
+        MoEPushHelper.getInstance().registerMessageListener(CustomPushMessageListener())
 
         setUpNotificationChannelsForMoEngage()
 
