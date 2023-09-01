@@ -9,9 +9,17 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
+import com.moengage.pushbase.IS_DEFAULT_ACTION
+import com.moengage.pushbase.MoEPushHelper
+import com.moengage.pushbase.NAVIGATION_TYPE_DEEP_LINK
+import com.moengage.pushbase.NAVIGATION_TYPE_RICH_LANDING
+import com.moengage.pushbase.NAVIGATION_TYPE_SCREEN_NAME
+import com.moengage.pushbase.NAV_ACTION
 import com.moengage.pushbase.model.NotificationPayload
 import com.moengage.pushbase.model.action.DismissAction
+import com.moengage.pushbase.model.action.NavigationAction
 import com.moengage.pushbase.push.PushMessageListener
 
 class CustomPushMessageListener: PushMessageListener() {
@@ -46,25 +54,50 @@ class CustomPushMessageListener: PushMessageListener() {
         return true
     }
 
-    override fun getRedirectIntent(context: Context): Intent {
-        val intent = Intent(Intent.ACTION_VIEW).apply {
-            data = Uri.parse("https://www.moengage.com")
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        }
-        return intent
-    }
+//    override fun getRedirectIntent(context: Context): Intent {
+//        val intent = Intent(Intent.ACTION_VIEW).apply {
+//            data = Uri.parse("https://www.moengage.com")
+//            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+//        }
+//        return intent
+//    }
 
     override fun onNotificationClick(activity: Activity, payload: Bundle) {
-        val url = payload.getString("showGoogleButton")
-        Log.i("CustomPMSTag", "onNotificationClick: ${url}")
-        if(url != null) {
-            val intent = Intent(Intent.ACTION_VIEW).apply {
-                data = Uri.parse(url)
+        val isDefaultAction = payload.getBoolean(IS_DEFAULT_ACTION)
+        Log.i("CustomPMSTag", "onNotificationClicked: $payload")
+        Log.i("CustomPMSTag", "onNotificationClicked: $isDefaultAction")
+        if(isDefaultAction) {
+            val url = payload.getString("showGoogleButton")
+            Log.i("CustomPMSTag", "onNotificationClick: ${url}")
+            if(url != null) {
+                val intent = Intent(Intent.ACTION_VIEW).apply {
+                    data = Uri.parse(url)
+                }
+                activity.startActivity(intent)
+                return
             }
-            activity.startActivity(intent)
         } else {
-            super.onNotificationClick(activity, payload)
+            val action = payload.getParcelable<NavigationAction>(NAV_ACTION)
+            Log.i("CustomPMSTag", "onNotificationClicked: action.navigationType = ${action?.navigationType}")
+            if(action != null) {
+                when(action.navigationType) {
+                    NAVIGATION_TYPE_SCREEN_NAME -> {
+                        Toast.makeText(activity, "Opening Activity", Toast.LENGTH_SHORT).show()
+                    }
+
+                    NAVIGATION_TYPE_DEEP_LINK -> {
+                        Toast.makeText(activity, "Opening Deeplink", Toast.LENGTH_SHORT).show()
+                    }
+
+                    NAVIGATION_TYPE_RICH_LANDING -> {
+                        Toast.makeText(activity, "Opening Rich Landing", Toast.LENGTH_SHORT).show()
+                    }
+
+                }
+            }
         }
+
+        super.onNotificationClick(activity, payload)
     }
 
     override fun handleCustomAction(context: Context, payload: String) {

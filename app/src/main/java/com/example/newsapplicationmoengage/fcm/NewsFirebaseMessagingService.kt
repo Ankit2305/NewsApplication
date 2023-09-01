@@ -35,15 +35,15 @@ class NewsFirebaseMessagingService: FirebaseMessagingService() {
             Log.i("NewsFMSTag", "onMessageReceived ${remoteMessage.data}")
 
             //Pass Data payload to MoeEngage SDK
-//            MoEFireBaseHelper.getInstance().passPushPayload(applicationContext, remoteMessage.data)
-//            handleNotification = false
+            MoEFireBaseHelper.getInstance().passPushPayload(applicationContext, remoteMessage.data)
+            handleNotification = false
 
             //Handling MoEngage Push manually
-            val payload = remoteMessage.data
-            remoteMessage.data.put("title", payload.getValue("gcm_title"))
-            remoteMessage.data.put("message", payload.getValue("gcm_alert"))
-            MoEPushHelper.getInstance().logNotificationReceived(applicationContext, remoteMessage.data)
-            handleNotification = !MoEPushHelper.getInstance().isSilentPush(remoteMessage.data)
+//            val payload = remoteMessage.data
+//            remoteMessage.data.put("title", payload.getValue("gcm_title"))
+//            remoteMessage.data.put("message", payload.getValue("gcm_alert"))
+//            MoEPushHelper.getInstance().logNotificationReceived(applicationContext, remoteMessage.data)
+//            handleNotification = !MoEPushHelper.getInstance().isSilentPush(remoteMessage.data)
         }
 
         if (handleNotification && remoteMessage.data.isNotEmpty()) {
