@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">NewsApplicationMoEngage</string>
+    <string name="notification_center">Notification Center</string>
+
+<!--    Default is "Notificaiton Inbox"-->
+    <string name="moe_inbox_notification_title">Notification Center</string>
 </resources>

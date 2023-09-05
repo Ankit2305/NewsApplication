@@ -1,16 +1,18 @@
 package com.example.newsapplicationmoengage
 
+import com.moengage.inbox.ui.view.InboxActivity
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.lifecycleScope
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newsapplicationmoengage.constant.SortOrder
 import com.example.newsapplicationmoengage.databinding.ActivityMainBinding
@@ -23,16 +25,11 @@ import com.moengage.core.DataCenter
 import com.moengage.core.LogLevel
 import com.moengage.core.MoECoreHelper
 import com.moengage.core.MoEngage
-import com.moengage.core.Properties
-import com.moengage.core.analytics.MoEAnalyticsHelper
 import com.moengage.core.config.LogConfig
 import com.moengage.core.config.NotificationConfig
 import com.moengage.pushbase.MoEPushHelper
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import kotlin.math.log
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -179,6 +176,23 @@ class MainActivity : AppCompatActivity() {
         val logNotificationOnClick = intent.getBooleanExtra("logNotificationOnClick", false)
         if(logNotificationOnClick) {
             MoEPushHelper.getInstance().logNotificationClick(applicationContext, intent)
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.main_activity_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.notification_center -> {
+            val intent = Intent(this, InboxActivity::class.java)
+            startActivity(intent)
+            true
+        }
+        else -> {
+            super.onOptionsItemSelected(item)
         }
     }
 }

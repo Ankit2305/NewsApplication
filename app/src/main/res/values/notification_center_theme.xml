@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+<!--    <style name="MoEInboxTheme.NoActionBar">-->
+<!--        <item name="colorPrimary">@color/moe_inbox_color_primary</item>-->
+<!--        <item name="colorPrimaryDark">@color/moe_inbox_color_primary_dark</item>-->
+<!--        <item name="colorControlNormal">@color/moe_inbox_control_color</item>-->
+<!--        <item name="android:background">@color/moe_inbox_background_color</item>-->
+<!--    </style>-->
+
+<!--    <style name="MoETheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Light" />-->
+
+<!--    <style name="MoETheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>-->
+
+
+    <!--  Toolbar Text Style-->
+    <style name="MoEInboxToolbarTextStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">@dimen/moe_inbox_tab_font_size</item>
+        <item name="android:textStyle">bold</item>
+        <item name="background">@color/moe_inbox_transparent_color</item>
+    </style>
+
+    <!-- Header style -->
+    <style name="MoEInboxHeaderTextStyle">
+        <item name="android:background">@color/moe_inbox_transparent_color</item>
+        <item name="android:textSize">@dimen/moe_inbox_header_font_size</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:textColor">@color/moe_inbox_header_color</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- Message style -->
+    <style name="MoEInboxMessageTextStyle">
+        <item name="android:background">@color/moe_inbox_transparent_color</item>
+        <item name="android:textSize">@dimen/moe_inbox_content_font_size</item>
+        <item name="android:maxLines">3</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">@color/moe_inbox_message_color</item>
+        <item name="android:fontFamily">@font/roboto</item>
+    </style>
+
+    <!-- List Item Separator style -->
+    <style name="MoEInboxSeparatorStyle">
+        <item name="android:background">@drawable/moe_inbox_item_divider</item>
+    </style>
+
+    <!-- Timestamp Style -->
+    <style name="MoEInboxTimeTextStyle">
+        <item name="android:background">@color/moe_inbox_transparent_color</item>
+        <item name="android:textSize">@dimen/moe_inbox_time_font_size</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:textColor">@color/moe_inbox_timestamp_color</item>
+        <item name="android:fontFamily">@font/roboto</item>
+    </style>
+
+    <!--  Empty List Style-->
+    <style name="MoEInboxEmptyBoxTextStyle">
+        <item name="android:background">@color/moe_inbox_transparent_color</item>
+        <item name="android:textSize">@dimen/moe_inbox_empty_box_text_size</item>
+        <item name="android:textColor">@color/moe_inbox_message_color</item>
+        <item name="android:fontFamily">@font/roboto</item>
+    </style>
+
+    <!--  Scrollbar style-->
+    <style name="MoEInboxScrollbarStyle">
+        <item name="android:scrollbarAlwaysDrawVerticalTrack">true</item>
+        <item name="android:scrollbarStyle">outsideOverlay</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:fadeScrollbars">true</item>
+        <item name="android:scrollbarThumbVertical">@drawable/moe_inbox_vertical_scroller_thumb</item>
+        <item name="android:scrollbarSize">30dp</item>
+    </style>
+</resources>

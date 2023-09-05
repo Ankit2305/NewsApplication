@@ -8,6 +8,7 @@ import com.example.newsapplicationmoengage.helper.MoeEventHelper
 import com.example.newsapplicationmoengage.helper.SharedPreferencesHelper
 import com.example.newsapplicationmoengage.helper.addFCMTokenListener
 import com.example.newsapplicationmoengage.helper.login.LocalLogin
+import com.example.newsapplicationmoengage.moe.CustomInboxAdapter
 import com.example.newsapplicationmoengage.moe.CustomPushMessageListener
 import com.google.firebase.FirebaseApp
 import com.moengage.core.DataCenter
@@ -23,6 +24,7 @@ import com.moengage.core.listeners.AppBackgroundListener
 import com.moengage.core.model.AppBackgroundData
 import com.moengage.core.model.AppStatus
 import com.moengage.firebase.MoEFireBaseHelper
+import com.moengage.inbox.ui.MoEInboxUiHelper
 import com.moengage.pushbase.MoEPushHelper
 import com.moengage.pushbase.listener.TokenAvailableListener
 import com.moengage.pushbase.model.Token
@@ -74,6 +76,9 @@ class NewsApplication: Application() {
 
         //Add Custom Notification Listener
         MoEPushHelper.getInstance().registerMessageListener(CustomPushMessageListener())
+
+        //Set Custom Inbox Adapter
+        MoEInboxUiHelper.getInstance().setInboxAdapter(CustomInboxAdapter())
 
         setUpNotificationChannelsForMoEngage()
 
